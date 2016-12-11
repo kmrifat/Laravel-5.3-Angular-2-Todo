@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <h1> Add Todo </h1>
+
+      <hr>
+      <form (ngSubmit)="newTodo()">
+        <div class="form-group">
+          <label for="todo">Todo</label>
+          <input required type="text" [(ngModel)]="title" name="title" class="form-control" id="todo" placeholder="New Todo">
+          <span *ngIf="!uniqueTitle">This title is not unique</span>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <hr>
+      <div *ngIf="todos && todos.length > 0">
+        <h1>{{title1}} <span (click)="toggleSearch()" class="pull-right search"> <i class="glyphicon glyphicon-search"></i> </span>          </h1>
+        <hr>
+        <div>
+          <ul class="list-group">
+            <li class="list-group-item" [style.display]="showSearchBox ? '' : 'none' "> <input autofocus="inputFocused" (keyup.enter)="search()" [(ngModel)]="searchText" name="searchText" type="text"
+                class="form-control"> </li>
+            <li class="list-group-item" *ngFor="let todo of todos" [style.text-decoration]="todo.status == 1 ? 'line-through' : ''">
+
+              <input type="text" [(ngModel)]="id" hidden>
+              <input type="text" (keyup.enter)="updateTodo(id)" class="custom-input" *ngIf="todo.id == index" [(ngModel)]="selectedTodo">
+              <span *ngIf="todo.id === index && isInEdit">This title is not unique</span>
+              <div *ngIf="todo.id === index" class="pull-right btn-group btn-group-xs" role="group" aria-label="...">
+                  <button type="button" (click)="cancleEdit(todo)" class="btn btn-danger"> <i class="glyphicon glyphicon-remove"></i> </button>
+             </div>
+
+
+             <div *ngIf="todo.status !== 3">
+                <div *ngIf="todo.id !== index" class="pull-right btn-group btn-group-xs" role="group" aria-label="...">
+                  <button type="button" [style.display]="todo.status == 1 ? 'none' : '' " (click)="compleateTodo(todo)" class="btn btn-default"> <i class="glyphicon glyphicon-ok"></i></button>
+                  <button type="button" [style.display]="todo.status == 0 ? 'none' : '' " (click)="incompleateTodo(todo)" class="btn btn-default"> <i class="glyphicon glyphicon-repeat"></i></button>
+                  <button type="button" [style.display]="todo.status == 1 ? 'none' : '' " (click)="editTodo(todo)" class="btn btn-success"><i class="glyphicon glyphicon-pencil"></i></button>
+                  <button type="button" (click)="deleteTodo(todo)" class="btn btn-danger"> <i class="glyphicon glyphicon-remove"></i> </button>
+                </div>
+              </div>
+              <span *ngIf="todo.id !== index">{{todo.title}}</span>
+            </li>
+          </ul>
+
+          <nav *ngIf="total_todo > per_page" aria-label="Page navigation">
+            <ul class="pagination">
+              <li *ngIf="disablePrev">
+                <a (click)="pageNumber(current_page - 1)" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li *ngFor="let number of last_page;let i = index"><a (click)="pageNumber(i+1)" [style.text-decoration]="current_page == i+1 ? 'line-through' : ''">{{ i+1 }}</a></li>
+              <li *ngIf="disableNext">
+                <a (click)="pageNumber(current_page + 1)" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
